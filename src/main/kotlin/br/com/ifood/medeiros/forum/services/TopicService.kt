@@ -2,6 +2,8 @@ package br.com.ifood.medeiros.forum.services
 
 import br.com.ifood.medeiros.forum.dtos.TopicForm
 import br.com.ifood.medeiros.forum.dtos.TopicView
+import br.com.ifood.medeiros.forum.mappers.TopicFormMapper
+import br.com.ifood.medeiros.forum.mappers.TopicViewMapper
 import br.com.ifood.medeiros.forum.model.Topic
 import org.springframework.stereotype.Service
 import java.util.*
@@ -12,6 +14,8 @@ class TopicService(
     private var topics: List<Topic> = ArrayList(),
     private val courseService: CourseService,
     private val userService: UserService,
+    private val topicViewMapper: TopicViewMapper,
+    private val topicFormMapper: TopicFormMapper
 ) {
 
     init {
@@ -30,13 +34,9 @@ class TopicService(
     }
 
     fun list(): List<TopicView> {
-        return topics.stream().map { topic -> TopicView(
-            id = topic.id,
-            title = topic.message,
-            message = topic.message,
-            status = topic.status,
-            createdAt = topic.createdAt
-        ) }.collect(Collectors.toList())
+        return topics.stream().map {
+            topic -> topicViewMapper.map(topic)
+        }.collect(Collectors.toList())
     }
 
     fun getById(id: Long): TopicView {
@@ -45,18 +45,11 @@ class TopicService(
         }.findFirst().get()
     }
 
-    fun store(topicForm: TopicForm): Topic {
-        val topic = Topic(
-            id = topics.size.toLong() + 1,
-            title = topicForm.title,
-            message = topicForm.message,
-            course = courseService.getById(topicForm.idCourse),
-            author = userService.getById(topicForm.idAuthor),
-        )
+    fun store(topicForm: TopicForm) {
+        val topic = topicFormMapper.map(topicForm)
+        topic.id = topics.size.toLong() + 1
 
         topics = topics.plus(topic)
-
-        return topic
     }
 
 }

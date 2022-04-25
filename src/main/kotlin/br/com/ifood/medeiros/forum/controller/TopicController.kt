@@ -26,7 +26,7 @@ class TopicController(private val service: TopicService) {
     }
 
     @PostMapping
-    fun store(@RequestBody dto: TopicForm): Topic {
-        return service.store(dto)
+    fun store(@RequestBody dto: TopicForm) {
+        service.store(dto)
     }
 }
