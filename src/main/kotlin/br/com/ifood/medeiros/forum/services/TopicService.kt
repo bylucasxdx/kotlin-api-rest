@@ -2,6 +2,7 @@ package br.com.ifood.medeiros.forum.services
 
 import br.com.ifood.medeiros.forum.dtos.TopicForm
 import br.com.ifood.medeiros.forum.dtos.TopicView
+import br.com.ifood.medeiros.forum.dtos.UpdateTopicForm
 import br.com.ifood.medeiros.forum.mappers.TopicFormMapper
 import br.com.ifood.medeiros.forum.mappers.TopicViewMapper
 import br.com.ifood.medeiros.forum.model.Topic
@@ -50,6 +51,31 @@ class TopicService(
         topic.id = topics.size.toLong() + 1
 
         topics = topics.plus(topic)
+    }
+
+    fun update(topicForm: UpdateTopicForm) {
+        val topic = topics.stream().filter { topic ->
+            topic.id == topicForm.id
+        }.findFirst().get()
+
+        topics = topics.minus(topic).plus(Topic(
+            id = topicForm.id,
+            title = topicForm.title,
+            message = topicForm.message,
+            author = topic.author,
+            course = topic.course,
+            answers = topic.answers,
+            status = topic.status,
+            createdAt = topic.createdAt
+        ))
+    }
+
+    fun delete(id: Long) {
+        val topic = topics.stream().filter { topic ->
+            topic.id == id
+        }.findFirst().get()
+
+        topics = topics.minus(topic)
     }
 
 }

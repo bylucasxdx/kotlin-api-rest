@@ -2,10 +2,13 @@ package br.com.ifood.medeiros.forum.controller
 
 import br.com.ifood.medeiros.forum.dtos.TopicForm
 import br.com.ifood.medeiros.forum.dtos.TopicView
+import br.com.ifood.medeiros.forum.dtos.UpdateTopicForm
 import br.com.ifood.medeiros.forum.services.TopicService
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -28,5 +31,15 @@ class TopicController(private val service: TopicService) {
     @PostMapping
     fun store(@RequestBody @Valid dto: TopicForm) {
         service.store(dto)
+    }
+
+    @PutMapping
+    fun update(@RequestBody @Valid topicForm: UpdateTopicForm) {
+        service.update(topicForm)
+    }
+
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long) {
+        service.delete(id)
     }
 }
