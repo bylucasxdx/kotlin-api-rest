@@ -46,19 +46,20 @@ class TopicService(
         }.findFirst().get()
     }
 
-    fun store(topicForm: TopicForm) {
+    fun store(topicForm: TopicForm): TopicView {
         val topic = topicFormMapper.map(topicForm)
         topic.id = topics.size.toLong() + 1
-
         topics = topics.plus(topic)
+
+        return topicViewMapper.map(topic)
     }
 
-    fun update(topicForm: UpdateTopicForm) {
+    fun update(topicForm: UpdateTopicForm): TopicView {
         val topic = topics.stream().filter { topic ->
             topic.id == topicForm.id
         }.findFirst().get()
 
-        topics = topics.minus(topic).plus(Topic(
+        val updatedTopic = Topic(
             id = topicForm.id,
             title = topicForm.title,
             message = topicForm.message,
@@ -67,7 +68,11 @@ class TopicService(
             answers = topic.answers,
             status = topic.status,
             createdAt = topic.createdAt
-        ))
+        )
+
+        topics = topics.minus(topic).plus(updatedTopic)
+
+        return topicViewMapper.map(updatedTopic)
     }
 
     fun delete(id: Long) {
