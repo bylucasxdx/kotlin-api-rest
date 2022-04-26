@@ -3,6 +3,7 @@ package br.com.ifood.medeiros.forum.services
 import br.com.ifood.medeiros.forum.dtos.TopicForm
 import br.com.ifood.medeiros.forum.dtos.TopicView
 import br.com.ifood.medeiros.forum.dtos.UpdateTopicForm
+import br.com.ifood.medeiros.forum.exceptions.NotFoundException
 import br.com.ifood.medeiros.forum.mappers.TopicFormMapper
 import br.com.ifood.medeiros.forum.mappers.TopicViewMapper
 import br.com.ifood.medeiros.forum.model.Topic
@@ -43,7 +44,7 @@ class TopicService(
     fun getById(id: Long): TopicView {
         return list().stream().filter { topic ->
             topic.id == id
-        }.findFirst().get()
+        }.findFirst().orElseThrow { NotFoundException("Topic not found") }
     }
 
     fun store(topicForm: TopicForm): TopicView {
@@ -57,7 +58,7 @@ class TopicService(
     fun update(topicForm: UpdateTopicForm): TopicView {
         val topic = topics.stream().filter { topic ->
             topic.id == topicForm.id
-        }.findFirst().get()
+        }.findFirst().orElseThrow { NotFoundException("Topic not found") }
 
         val updatedTopic = Topic(
             id = topicForm.id,
@@ -78,7 +79,7 @@ class TopicService(
     fun delete(id: Long) {
         val topic = topics.stream().filter { topic ->
             topic.id == id
-        }.findFirst().get()
+        }.findFirst().orElseThrow { NotFoundException("Topic not found") }
 
         topics = topics.minus(topic)
     }
