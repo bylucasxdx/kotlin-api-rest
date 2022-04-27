@@ -10,7 +10,7 @@ class TopicViewMapper: Mapper<Topic, TopicView> {
     override fun map(topic: Topic): TopicView {
         return TopicView(
             id = topic.id,
-            title = topic.message,
+            title = topic.title,
             message = topic.message,
             status = topic.status,
             createdAt = topic.createdAt
