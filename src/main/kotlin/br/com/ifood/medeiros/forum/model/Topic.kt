@@ -1,16 +1,26 @@
 package br.com.ifood.medeiros.forum.model
 
 import java.time.LocalDateTime
+import javax.persistence.*
 
+@Entity
 data class Topic (
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    var title: String,
-    var message: String,
+    val title: String,
+    val message: String,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val course: Course,
-    val author: User,
-    val status: StatusTopic = StatusTopic.NOT_ANSWERED,
-    val answers: List<Answer> = ArrayList()
 
+    @ManyToOne
+    val course: Course,
+
+    @ManyToOne
+    val author: User,
+
+    @Enumerated(value = EnumType.STRING)
+    val status: StatusTopic = StatusTopic.NOT_ANSWERED,
+
+    @OneToMany(mappedBy = "topic")
+    val answers: List<Answer> = ArrayList()
 )
