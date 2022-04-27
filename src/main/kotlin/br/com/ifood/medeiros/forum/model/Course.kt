@@ -14,6 +14,4 @@ data class Course (
 
     val name: String,
     val category: String,
-) {
-    internal constructor(): this(null, "", "")
-}
+)
