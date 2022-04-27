@@ -7,8 +7,13 @@ import javax.persistence.Id
 
 @Entity
 data class Course (
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+
     val name: String,
     val category: String,
-)
+) {
+    internal constructor(): this(null, "", "")
+}
