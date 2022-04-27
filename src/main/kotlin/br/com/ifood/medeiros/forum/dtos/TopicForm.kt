@@ -6,7 +6,8 @@ import javax.validation.constraints.Size
 
 data class TopicForm (
 
-    @field:NotEmpty @field:Size(min = 5, max = 100)
+    @field:NotEmpty(message = "Title is mandatory")
+    @field:Size(min = 5, max = 100)
     val title: String,
 
     @field:NotEmpty
