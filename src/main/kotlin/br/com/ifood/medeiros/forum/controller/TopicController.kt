@@ -6,6 +6,7 @@ import br.com.ifood.medeiros.forum.dtos.UpdateTopicForm
 import br.com.ifood.medeiros.forum.services.TopicService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -33,6 +34,7 @@ class TopicController(private val service: TopicService) {
     }
 
     @PostMapping
+    @Transactional
     fun store(
         @RequestBody @Valid dto: TopicForm,
         uriBuilder: UriComponentsBuilder
@@ -44,6 +46,7 @@ class TopicController(private val service: TopicService) {
     }
 
     @PutMapping
+    @Transactional
     fun update(@RequestBody @Valid topicForm: UpdateTopicForm): ResponseEntity<TopicView> {
         val updatedTopic = service.update(topicForm)
         return ResponseEntity.ok(updatedTopic)
