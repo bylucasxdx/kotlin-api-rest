@@ -7,6 +7,8 @@ import br.com.ifood.medeiros.forum.exceptions.NotFoundException
 import br.com.ifood.medeiros.forum.mappers.TopicFormMapper
 import br.com.ifood.medeiros.forum.mappers.TopicViewMapper
 import br.com.ifood.medeiros.forum.repositories.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
 
@@ -17,17 +19,17 @@ class TopicService(
     private val topicFormMapper: TopicFormMapper
 ) {
 
-    fun list(courseName: String?): List<TopicView> {
+    fun list(courseName: String?, paginate: Pageable): Page<TopicView> {
         val topics = if (courseName == null) {
-            repository.findAll()
+            repository.findAll(paginate)
         } else {
-            repository.findByCourseName(courseName)
+            repository.findByCourseName(courseName, paginate)
         }
 
-        return topics.stream().map {
+        return topics.map {
                 topic ->
             topicViewMapper.map(topic)
-        }.collect(Collectors.toList())
+        }
     }
 
     fun getById(id: Long): TopicView {
