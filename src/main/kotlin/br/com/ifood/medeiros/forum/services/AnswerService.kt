@@ -2,11 +2,8 @@ package br.com.ifood.medeiros.forum.services
 
 import br.com.ifood.medeiros.forum.dtos.AnswerForm
 import br.com.ifood.medeiros.forum.model.Answer
-import br.com.ifood.medeiros.forum.model.Course
 import br.com.ifood.medeiros.forum.model.Topic
-import br.com.ifood.medeiros.forum.model.User
 import org.springframework.stereotype.Service
-import java.util.*
 import java.util.stream.Collectors
 
 @Service
@@ -15,29 +12,6 @@ class AnswerService(
     private val courseService: CourseService,
     private val userService: UserService,
 ) {
-
-    init {
-        val course = courseService.getById(1)
-        val user = userService.getById(1)
-
-        val topic = Topic(
-            id = 1,
-            title = "Dúvidas Kotlin",
-            message = "Variáveis Kotlin",
-            course = course,
-            author = user,
-        )
-
-        val answer = Answer(
-            id = 1,
-            message = "Primeira resposta",
-            author = user,
-            topic = topic,
-            solved = false
-        )
-
-        answers = Arrays.asList(answer)
-    }
 
     fun list(id: Long): List<Answer> {
         return answers.stream().filter { answer ->
@@ -67,5 +41,4 @@ class AnswerService(
 
         answers = answers.plus(answer)
     }
-
 }

@@ -1,13 +1,13 @@
 CREATE TABLE topic(
-    id bigint not null,
+    id bigint not null auto_increment,
     title varchar(50) not null,
     message varchar(300) not null,
-    createdAt datetime not null,
+    created_at datetime not null,
     status varchar(50) not null,
-    fk_course_id bigint not null,
-    fk_author_id bigint not null,
+    course_id bigint not null,
+    author_id bigint not null,
 
     primary key(id),
-    foreign key(fk_course_id) references course(id),
-    foreign key(fk_author_id) references users(id)
+    foreign key(course_id) references course(id),
+    foreign key(author_id) references users(id)
 );
