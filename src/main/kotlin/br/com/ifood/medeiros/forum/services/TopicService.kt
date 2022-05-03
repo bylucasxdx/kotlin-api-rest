@@ -6,10 +6,8 @@ import br.com.ifood.medeiros.forum.dtos.UpdateTopicForm
 import br.com.ifood.medeiros.forum.exceptions.NotFoundException
 import br.com.ifood.medeiros.forum.mappers.TopicFormMapper
 import br.com.ifood.medeiros.forum.mappers.TopicViewMapper
-import br.com.ifood.medeiros.forum.model.Topic
 import br.com.ifood.medeiros.forum.repositories.TopicRepository
 import org.springframework.stereotype.Service
-import java.util.*
 import java.util.stream.Collectors
 
 @Service
@@ -19,9 +17,16 @@ class TopicService(
     private val topicFormMapper: TopicFormMapper
 ) {
 
-    fun list(): List<TopicView> {
-        return repository.findAll().stream().map {
-            topic -> topicViewMapper.map(topic)
+    fun list(courseName: String?): List<TopicView> {
+        val topics = if (courseName == null) {
+            repository.findAll()
+        } else {
+            repository.findByCourseName(courseName)
+        }
+
+        return topics.stream().map {
+                topic ->
+            topicViewMapper.map(topic)
         }.collect(Collectors.toList())
     }
 
@@ -35,7 +40,7 @@ class TopicService(
 
     fun store(topicForm: TopicForm): TopicView {
         val topic = topicFormMapper.map(topicForm)
-        repository.save(topic);
+        repository.save(topic)
 
         return topicViewMapper.map(topic)
     }
@@ -53,5 +58,4 @@ class TopicService(
     fun delete(id: Long) {
         repository.deleteById(id)
     }
-
 }
