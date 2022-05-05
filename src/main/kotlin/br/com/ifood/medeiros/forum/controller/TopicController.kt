@@ -4,6 +4,8 @@ import br.com.ifood.medeiros.forum.dtos.TopicForm
 import br.com.ifood.medeiros.forum.dtos.TopicView
 import br.com.ifood.medeiros.forum.dtos.UpdateTopicForm
 import br.com.ifood.medeiros.forum.services.TopicService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -29,6 +31,7 @@ import javax.validation.Valid
 class TopicController(private val service: TopicService) {
 
     @GetMapping
+    @Cacheable("topic-list")
     fun list(
         @RequestParam(required = false) courseName: String?,
         @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC) paginate: Pageable
@@ -43,6 +46,7 @@ class TopicController(private val service: TopicService) {
 
     @PostMapping
     @Transactional
+    @CacheEvict(value = ["topic-list"], allEntries = true)
     fun store(
         @RequestBody @Valid dto: TopicForm,
         uriBuilder: UriComponentsBuilder
@@ -55,6 +59,7 @@ class TopicController(private val service: TopicService) {
 
     @PutMapping
     @Transactional
+    @CacheEvict(value = ["topic-list"], allEntries = true)
     fun update(@RequestBody @Valid topicForm: UpdateTopicForm): ResponseEntity<TopicView> {
         val updatedTopic = service.update(topicForm)
         return ResponseEntity.ok(updatedTopic)
@@ -62,6 +67,7 @@ class TopicController(private val service: TopicService) {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(value = ["topic-list"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
