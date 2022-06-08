@@ -49,7 +49,7 @@ class TopicController(private val service: TopicService) {
     @CacheEvict(value = ["topic-list"], allEntries = true)
     fun store(
         @RequestBody @Valid dto: TopicForm,
-        uriBuilder: UriComponentsBuilder
+        uriBuilder: UriComponentsBuilder,
     ): ResponseEntity<TopicView> {
         val topic = service.store(dto)
         val uri = uriBuilder.path("/topics/${topic.id}").build().toUri()
